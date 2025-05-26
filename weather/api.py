@@ -3,7 +3,7 @@ from django.db.models import Count
 from .models import SearchHistory
 
 
-def city_search_stats():
+def city_search_stats(request):
     stats = (
         SearchHistory.objects
         .values("city")

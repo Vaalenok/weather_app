@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pkl
+*.egg-info/
+*.egg
+*.log
+
+# Environment
+.env
+.venv/
+env/
+venv/
+
+# VS Code
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Pytest cache
+.pytest_cache/
+
+# Migrations
+**/migrations/*.py
+!**/migrations/__init__.py
+
+# SQLite
+*.sqlite3
+
+# Coverage
+htmlcov/
+.coverage
+
+# Docker
+*.pid
+*.db
+*.sock
+*.tar
+*.log
