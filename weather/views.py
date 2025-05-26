@@ -1,3 +1,4 @@
+import json
 import requests
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -8,13 +9,17 @@ def index(request):
     forecast = []
     error = None
 
+    last_cities_json = request.COOKIES.get("last_cities", "[]")
+
+    try:
+        last_cities = json.loads(last_cities_json)
+    except json.JSONDecodeError:
+        last_cities = []
+
     if city:
         geo_response = requests.get(
             "https://geocoding-api.open-meteo.com/v1/search",
-            params={
-                "name": city,
-                "count": 1
-            }
+            params={"name": city, "count": 1}
         )
 
         if geo_response.ok:
@@ -42,6 +47,14 @@ def index(request):
                         data["daily"]["temperature_2m_min"],
                         data["daily"]["temperature_2m_max"]
                     ))
+
+                    city_title = city.lower().title()
+
+                    if city_title in last_cities:
+                        last_cities.remove(city_title)
+
+                    last_cities.insert(0, city_title)
+                    last_cities = last_cities[:3]
                 else:
                     error = "Ошибка получения погоды"
             else:
@@ -52,10 +65,16 @@ def index(request):
     context = {
         "forecast": forecast,
         "city": city.lower().title() if city else None,
-        "error": error
+        "error": error,
+        "last_cities": last_cities if not city else []
     }
 
-    return render(request, "weather/index.html", context)
+    response = render(request, "weather/index.html", context)
+
+    if city:
+        response.set_cookie("last_cities", json.dumps(last_cities), max_age=365*24*60*60)
+
+    return response
 
 
 def city_autocomplete(request):
