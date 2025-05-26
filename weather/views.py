@@ -1,11 +1,22 @@
-import json
-import requests
 from django.http import JsonResponse
 from django.shortcuts import render
+import json
+import requests
+import uuid
+
+from .models import SearchHistory
 
 
 def index(request):
     city = request.GET.get("city")
+    cookie_id = request.COOKIES.get("user_id")
+
+    if not cookie_id:
+        cookie_id = str(uuid.uuid4())
+
+    if city:
+        SearchHistory.objects.create(city=city, cookie_id=cookie_id)
+
     forecast = []
     error = None
 
