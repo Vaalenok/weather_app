@@ -13,7 +13,7 @@
 ### Из коробки
 * Настроить виртуальное окружение
 * Установить необходимые пакеты из `requirements.txt`
-* Создать базу данных через `python manage.py migrate`
+* Создать базу данных через `python manage.py migrate weather`
 * Запустить (доступно на `localhost:8000`)
 
 ### Docker
